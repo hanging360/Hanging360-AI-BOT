@@ -1,10 +1,1 @@
-{
-  "dependencies": {
-    "typescript": "^5.0.0",
-    "express": "^4.17.1"
-  },
-  "devDependencies": {
-    "eslint": "^7.32.0",
-    "prettier": "^2.5.1"
-  }
-}
+{\n  "name": "hanging360-ai-bot",\n  "version": "1.0.0",\n  "scripts": {\n    "dev": "ts-node-esm src/index.ts",\n    "build": "tsc",\n    "start": "node dist/index.js"\n  },\n  "dependencies": {\n    "fastify": "^4.0.0",\n    "tsx": "^3.0.0",\n    "typescript": "^5.0.0",\n    "zod": "^3.0.0",\n    "@supabase/supabase-js": "^2.0.0",\n    "dotenv": "^16.0.0"\n  },\n  "type": "module"\n}
