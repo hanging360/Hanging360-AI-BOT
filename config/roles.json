@@ -1,0 +1,8 @@
+{
+  "roles": [
+    {
+      "name": "Role1",
+      "permissions": ["permission1"]
+    }
+  ]
+}
