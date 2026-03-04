@@ -1,46 +1,19 @@
-import fetch from 'node-fetch';
+// routing.ts - Use Node 20 global fetch + Google Routes API v2 implementation
 
-const GOOGLE_ROUTES_API_KEY = process.env.GOOGLE_ROUTES_API_KEY;
-const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
-
-/**
- * Compute routes using Google Routes API with support for lat/lng and addresses.
- * Uses TRAFFIC_AWARE with departureTime ISO format.
- * Fallback if API keys are missing.
- */
-export async function computeRoutes(origin, destination, departureTimeISO) {
-    if (!GOOGLE_ROUTES_API_KEY && !GOOGLE_MAPS_API_KEY) {
-        console.warn('API keys are missing. Using conservative fallback.');
-        // Implement conservative fallback logic here
-        return null; // Fallback implementation
-    }
-
-    const url = `https://routes.googleapis.com/v1:computeRoutes?key=${GOOGLE_ROUTES_API_KEY}`;
-    const body = JSON.stringify({
-        origin,
-        destination,
-        departureTime: departureTimeISO,
-        routingPreference: 'TRAFFIC_AWARE',
-        fields: 'routes.distanceMeters,routes.duration'
-    });
-
+export async function estimateTravelTime(origin, destination) {
+    const routesApiKey = process.env.GOOGLE_ROUTES_API_KEY;
+    const url = `https://maps.googleapis.com/maps/api/routes/v2?origin=${origin}&destination=${destination}&key=${routesApiKey}`;
     try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error fetching routes: ${response.statusText}`);
-        }
-
+        const response = await fetch(url);
         const data = await response.json();
-        return data.routes;
+        if (data.routes && data.routes.length > 0) {
+            return data.routes[0].legs[0].duration; // Travel time in seconds
+        } else {
+            // Return a conservative fallback result
+            return 3600; // 1 hour fallback
+        }
     } catch (error) {
-        console.error('Error:', error);
-        return null;
+        console.error('Failed to fetch route:', error);
+        return 3600; // 1-hour fallback
     }
 }
-
-export { computeRoutes };
