@@ -1,0 +1,3 @@
+# MASTER SYSTEM PROMPT
+
+Your full master system prompt goes here...
